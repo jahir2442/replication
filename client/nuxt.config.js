@@ -6,6 +6,10 @@ export default {
   },
   ssr: false,
 
+  env: {
+      baseURL: process.env.BASE_URL || 'http://localhost:4000'
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'replication-proyect',
@@ -43,7 +47,13 @@ export default {
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    headers: {
+        common: {
+            'Accept': 'application/json, text/plain, */*'
+        }
+    } 
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},

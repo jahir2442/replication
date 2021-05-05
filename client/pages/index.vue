@@ -1,63 +1,130 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">replication-proyect</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+  <div class="container-fluid">
+    <div class="row no-gutter">
+      <!-- The image half -->
+      <div class="col-md-6 d-none d-md-flex bg-image"></div>
+
+      <!-- The content half -->
+      <div class="col-md-6 bg-light">
+        <div class="login d-flex align-items-center py-5">
+          <!-- Demo content-->
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-10 col-xl-7 mx-auto">
+                <h3 class="display-4">Inicio de sesión</h3>
+                <p class="text-muted mb-4">Proyecto de replicación</p>
+                <form @submit.prevent="sendCredentials">
+                  <div class="form-group mb-3">
+                    <input
+                      v-model="inputEmail"
+                      placeholder="Email address"
+                      required=""
+                      autofocus=""
+                      class="form-control rounded-pill border-0 shadow-sm px-4"
+                    />
+                  </div>
+                  <div class="form-group mb-3">
+                    <input
+                      v-model="inputPassword"
+                      type="password"
+                      placeholder="Password"
+                      required=""
+                      class="form-control rounded-pill border-0 shadow-sm px-4 text-primary"
+                    />
+                  </div>
+                  <div class="custom-control custom-checkbox mb-3">
+                    <input
+                      id="customCheck1"
+                      type="checkbox"
+                      checked
+                      class="custom-control-input"
+                    />
+                    <label for="customCheck1" class="custom-control-label"
+                      >Remember password</label
+                    >
+                  </div>
+                  <button
+                    type="submit"
+                    class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm font-weight-bold"
+                  >
+                    Sign in
+                  </button>
+                  <div class="text-center d-flex justify-content-between mt-4">
+                    <p>
+                      Don´t have a account?
+                      <a href="/register-user" class="font-italic text-muted">
+                        <u>Create user</u></a
+                      >
+                    </p>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <!-- End -->
+        </div>
       </div>
+      <!-- End -->
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+import axios from 'axios'
+import Vue from 'vue';
+import VueSweetalert2 from 'vue-sweetalert2';
+
+// If you don't need the styles, do not connect
+import 'sweetalert2/dist/sweetalert2.min.css';
+
+Vue.use(VueSweetalert2);
+export default {
+  data() {
+    return {
+      inputEmail: '',
+      inputPassword: '',
+    }
+  },
+  methods: {
+    async sendCredentials() {
+      console.log(
+        'inputEmail: ',
+        this.inputEmail,
+        'InputPassword: ',
+        this.inputPassword
+      )
+
+      let response = await axios.post(`${process.env.baseURL}/api/auth/login`, {
+        email: this.inputEmail,
+        password: this.inputPassword,
+      });
+      console.log(response.data)
+      if(response.data.success) {
+          this.$swal({
+              title: "Inicio de sessión correctamente",
+              icon: "success"
+          });
+          await this.$router.push('/empresa/dasboard')
+      } else {
+          this.$swal({
+              title: "Credenciales incorrectas",
+              icon: "error"
+          });
+      }
+    },
+  },
+}
 </script>
 
 <style>
-.container {
-  margin: 0 auto;
+.login,
+.image {
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 }
 
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+.bg-image {
+  background-image: url('https://res.cloudinary.com/mhmd/image/upload/v1555917661/art-colorful-contemporary-2047905_dxtao7.jpg');
+  background-size: cover;
+  background-position: center center;
 }
 </style>
