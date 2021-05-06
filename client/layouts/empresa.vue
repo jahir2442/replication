@@ -19,14 +19,16 @@
                 img: ""
             }
         },
-        async fetch() {
-            // let data = await axios.get(`${process.env.baseURL}/api/user/currentUser`);
-            let data = await axios({
-                method: 'get',
-                url: `${process.env.baseURL}/api/user/currentUser`,
-            })
-            console.log(data);
-        }
+        // async mounted() {
+        //     let data = await this.$axios.$get(`${process.env.baseURL}/api/user/currentUser`);
+        //     console.log(data)
+            
+        // },
+        // async fetch() {
+        //     // let data = await axios.get(`${process.env.baseURL}/api/user/currentUser`);
+        //     let data = await this.$axios.$get(`${process.env.baseURL}/api/user/currentUser`);
+        //     console.log(data);
+        // }
     });
 </script>
 <style>

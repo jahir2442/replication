@@ -21,11 +21,9 @@ router.post('/login', async (req, res) => {
         return res.status(200).send({ success: false });
 
     // Generate JWT
+    delete userData.password;
     const userJwt = jwt.sign(
-        {
-            id: userData.id,
-            email: userData.email,
-        },
+        { userData },
         process.env.JWT_KEY || 'key'
     );
 

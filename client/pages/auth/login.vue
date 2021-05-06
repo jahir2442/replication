@@ -70,9 +70,10 @@
 </template>
 
 <script>
-import axios from 'axios'
-import Vue from 'vue'
-import VueSweetalert2 from 'vue-sweetalert2'
+import axios from 'axios';
+import Vue from 'vue';
+import VueSweetalert2 from 'vue-sweetalert2';
+import setCookie from 'js-cookie';
 
 // If you don't need the styles, do not connect
 import 'sweetalert2/dist/sweetalert2.min.css'
@@ -85,6 +86,8 @@ export default {
       inputPassword: '',
     }
   },
+  asyncData(context) {},
+  middleware: 'prueba',
   methods: {
     async sendCredentials() {
       console.log(
@@ -94,21 +97,47 @@ export default {
         this.inputPassword
       )
 
-      let response = await axios.post(`${process.env.baseURL}/api/auth/login`, {
-        email: this.inputEmail,
-        password: this.inputPassword,
-      })
-      console.log(response.data)
+    //   let response = await axios.post(
+    //     `${process.env.baseURL}/api/auth/login`,
+    //     {
+    //       email: this.inputEmail,
+    //       password: this.inputPassword,
+    //     },
+    //     {
+    //       headers: {
+    //         'Access-Control-Allow-Origin': '*',
+    //       },
+    //       withCredentials: true
+    //     }
+    //   )
+        let response = await axios({
+          url: '/api/auth/login',
+          method: 'post',
+          baseURL: process.env.baseURL,
+          data: {
+            email: this.inputEmail,
+            password: this.inputPassword,
+          },
+        }, { withCredentials: true });
+      console.log(response)
       if (response.data.success) {
         this.$swal({
           title: 'Inicio de sessión correctamente',
           icon: 'success',
         })
-        console.log(response.data)
-        // app.$cookies.set('jwt', response.data.jwt, {
-        //   maxAge: 60 * 60 * 24 * 7,
-        // });
-        //   await this.$router.push('/empresa/dashboard')
+        document.cookie = `express:sess=${response.data.jwt}`
+        setCookie("jwt", response.data.jwt);
+        console.log(response)
+        let data = await axios.get(
+          `${process.env.baseURL}/api/user/currentUser`,
+           { 
+            headers: {
+                'Set-Cookie': document.cookie
+                }
+           }
+        )
+        console.log(data)
+        // await this.$router.push('/empresa/dashboard')
       } else {
         this.$swal({
           title: 'Credenciales incorrectas',

@@ -5,14 +5,16 @@
       <div class="py-4 px-3 mb-4 bg-light">
         <div class="media d-flex align-items-center">
           <img
-            src="https://res.cloudinary.com/mhmd/image/upload/v1556074849/avatar-1_tcnd60.png"
+            :src="currentUser.image"
             alt="..."
             width="65"
             class="mr-3 rounded-circle img-thumbnail shadow-sm"
           />
           <div class="media-body">
-            <h4 class="m-0">Nombre de empleado</h4>
-            <p class="font-weight-light text-muted mb-0">Nombre de empresa</p>
+            <h4 class="m-0">{{ currentUser.fullName }}</h4>
+            <p class="font-weight-light text-muted mb-0">
+              {{ currentUser.rol }}
+            </p>
           </div>
         </div>
       </div>
@@ -52,7 +54,28 @@
 </template>
 
 <script>
-export default {}
+import axios from 'axios'
+export default {
+  data() {
+    return {
+      currentUser: {
+        fullName: '',
+        image: '',
+        rol: '',
+      },
+    }
+  },
+  async fetch() {
+    let data = await axios.get(`${process.env.baseURL}/api/user/currentUser`, {
+      headers: {
+        'Set-Cookie': document.cookie,
+      },
+    })
+    this.currentUser.fullName = data.data.currentUser.userData.full_name
+    this.currentUser.rol = data.data.currentUser.userData.rol
+    this.currentUser.image = data.data.currentUser.userData.image
+  },
+}
 </script>
 
 <style>

@@ -9,7 +9,8 @@
 
 <script>
 export default {
-    layout: 'empresa'
+    layout: 'empresa',
+    // middleware: "prueba"
 }
 </script>
 

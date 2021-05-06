@@ -7,11 +7,26 @@ const router = require('./src/router/router.js');
 const cookieSession = require('cookie-session');
 
 const app = express();
-app.use(cors());
+app.set('trust proxy', 1);
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        '*'
+    );
+    res.setHeader(
+        'Access-Control-Allow-Methods',
+        'GET, POST, PATCH, PUT, DELETE, OPTIONS'
+    );
+    next();
+});
 app.use(json());
 app.use(
     cookieSession({
-        signed: false
+        signed: false,
+        httpOnly: false,
+        secure: false,
+        domain: 'localhost:3000'
     })
 );
 

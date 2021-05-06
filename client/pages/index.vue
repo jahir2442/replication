@@ -71,13 +71,13 @@
 
 <script>
 import axios from 'axios'
-import Vue from 'vue';
-import VueSweetalert2 from 'vue-sweetalert2';
+import Vue from 'vue'
+import VueSweetalert2 from 'vue-sweetalert2'
 
 // If you don't need the styles, do not connect
-import 'sweetalert2/dist/sweetalert2.min.css';
+import 'sweetalert2/dist/sweetalert2.min.css'
 
-Vue.use(VueSweetalert2);
+Vue.use(VueSweetalert2)
 export default {
   data() {
     return {
@@ -87,29 +87,27 @@ export default {
   },
   methods: {
     async sendCredentials() {
-      console.log(
-        'inputEmail: ',
-        this.inputEmail,
-        'InputPassword: ',
-        this.inputPassword
-      )
-
-      let response = await axios.post(`${process.env.baseURL}/api/auth/login`, {
-        email: this.inputEmail,
-        password: this.inputPassword,
-      });
-      console.log(response.data)
-      if(response.data.success) {
-          this.$swal({
-              title: "Inicio de sessión correctamente",
-              icon: "success"
-          });
-          await this.$router.push('/empresa/dasboard')
+      let response = await axios({
+        url: '/api/auth/login',
+        method: 'post',
+        baseURL: process.env.baseURL,
+        data: {
+          email: this.inputEmail,
+          password: this.inputPassword,
+        },
+      })
+      if (response.data.success) {
+        this.$swal({
+          title: 'Inicio de sessión correctamente',
+          icon: 'success',
+        })
+        document.cookie = `express:sess=${response.data.jwt}`
+        await this.$router.push('/empresa/dashboard')
       } else {
-          this.$swal({
-              title: "Credenciales incorrectas",
-              icon: "error"
-          });
+        this.$swal({
+          title: 'Credenciales incorrectas',
+          icon: 'error',
+        })
       }
     },
   },
