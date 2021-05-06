@@ -49,33 +49,56 @@
           </a>
         </li>
       </ul>
+      <div class="container">
+        <div class="align-self-end ml-auto">
+          <v-btn class="mt-3" block elevation="2" @click="logout()"
+            >Cerrar Sessión</v-btn
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
   data() {
     return {
       currentUser: {
-        fullName: '',
-        image: '',
-        rol: '',
+        fullName: "",
+        image: "",
+        rol: "",
       },
-    }
+    };
+  },
+  methods: {
+    async logout() {
+      document.cookie =
+        "express:sess" + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      console.log(document.cookie);
+      await this.$router.push("/");
+    },
   },
   async fetch() {
-    let data = await axios.get(`${process.env.baseURL}/api/user/currentUser`, {
-      headers: {
-        'Set-Cookie': document.cookie,
-      },
-    })
-    this.currentUser.fullName = data.data.currentUser.userData.full_name
-    this.currentUser.rol = data.data.currentUser.userData.rol
-    this.currentUser.image = data.data.currentUser.userData.image
+    console.log(document.cookie);
+    let { data } = await axios.get(
+      `${process.env.baseURL}/api/user/currentUser`,
+      {
+        headers: {
+          "Set-Cookie": document.cookie,
+        },
+      }
+    );
+    if (data.currentUser) {
+      this.currentUser.fullName = data.currentUser.userData.full_name;
+      this.currentUser.rol = data.currentUser.userData.rol;
+      this.currentUser.image = data.currentUser.userData.image;
+    } else {
+      await this.$router.push("/");
+    }
   },
-}
+};
 </script>
 
 <style>

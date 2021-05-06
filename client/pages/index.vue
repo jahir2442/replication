@@ -70,48 +70,48 @@
 </template>
 
 <script>
-import axios from 'axios'
-import Vue from 'vue'
-import VueSweetalert2 from 'vue-sweetalert2'
+import axios from "axios";
+import Vue from "vue";
+import VueSweetalert2 from "vue-sweetalert2";
 
 // If you don't need the styles, do not connect
-import 'sweetalert2/dist/sweetalert2.min.css'
+import "sweetalert2/dist/sweetalert2.min.css";
 
-Vue.use(VueSweetalert2)
+Vue.use(VueSweetalert2);
 export default {
   data() {
     return {
-      inputEmail: '',
-      inputPassword: '',
-    }
+      inputEmail: "",
+      inputPassword: "",
+    };
   },
   methods: {
     async sendCredentials() {
       let response = await axios({
-        url: '/api/auth/login',
-        method: 'post',
+        url: "/api/auth/login",
+        method: "post",
         baseURL: process.env.baseURL,
         data: {
           email: this.inputEmail,
           password: this.inputPassword,
         },
-      })
+      });
       if (response.data.success) {
         this.$swal({
-          title: 'Inicio de sessión correctamente',
-          icon: 'success',
-        })
-        document.cookie = `express:sess=${response.data.jwt}`
-        await this.$router.push('/empresa/dashboard')
+          title: "Inicio de sessión correctamente",
+          icon: "success",
+        });
+        document.cookie = `express:sess=${response.data.jwt}`;
+        await this.$router.push("/empresa/dashboard");
       } else {
         this.$swal({
-          title: 'Credenciales incorrectas',
-          icon: 'error',
-        })
+          title: "Credenciales incorrectas",
+          icon: "error",
+        });
       }
     },
   },
-}
+};
 </script>
 
 <style>
@@ -119,9 +119,98 @@ export default {
 .image {
   min-height: 100vh;
 }
+.container,
+.container-fluid,
+.container-sm,
+.container-md,
+.container-lg,
+.container-xl {
+  /* width: 100%; */
+  padding-right: 0px;
+  padding-left: 0px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+body {
+  overflow-x: clip;
+}
+.col-xl,
+.col-xl-auto,
+.col-xl-12,
+.col-xl-11,
+.col-xl-10,
+.col-xl-9,
+.col-xl-8,
+.col-xl-7,
+.col-xl-6,
+.col-xl-5,
+.col-xl-4,
+.col-xl-3,
+.col-xl-2,
+.col-xl-1,
+.col-lg,
+.col-lg-auto,
+.col-lg-12,
+.col-lg-11,
+.col-lg-10,
+.col-lg-9,
+.col-lg-8,
+.col-lg-7,
+.col-lg-6,
+.col-lg-5,
+.col-lg-4,
+.col-lg-3,
+.col-lg-2,
+.col-lg-1,
+.col-md,
+.col-md-auto,
+.col-md-12,
+.col-md-11,
+.col-md-10,
+.col-md-9,
+.col-md-8,
+.col-md-7,
+.col-md-6,
+.col-md-5,
+.col-md-4,
+.col-md-3,
+.col-md-2,
+.col-md-1,
+.col-sm,
+.col-sm-auto,
+.col-sm-12,
+.col-sm-11,
+.col-sm-10,
+.col-sm-9,
+.col-sm-8,
+.col-sm-7,
+.col-sm-6,
+.col-sm-5,
+.col-sm-4,
+.col-sm-3,
+.col-sm-2,
+.col-sm-1,
+.col,
+.col-auto,
+.col-12,
+.col-11,
+.col-10,
+.col-9,
+.col-8,
+.col-7,
+.col-6,
+.col-5,
+.col-4,
+.col-3,
+.col-2,
+.col-1 {
+  width: 100%;
+  padding-block-start: 0px;
+}
 
 .bg-image {
-  background-image: url('https://res.cloudinary.com/mhmd/image/upload/v1555917661/art-colorful-contemporary-2047905_dxtao7.jpg');
+  background-image: url("https://res.cloudinary.com/mhmd/image/upload/v1555917661/art-colorful-contemporary-2047905_dxtao7.jpg");
   background-size: cover;
   background-position: center center;
 }
