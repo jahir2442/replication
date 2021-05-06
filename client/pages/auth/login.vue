@@ -71,13 +71,13 @@
 
 <script>
 import axios from 'axios'
-import Vue from 'vue';
-import VueSweetalert2 from 'vue-sweetalert2';
+import Vue from 'vue'
+import VueSweetalert2 from 'vue-sweetalert2'
 
 // If you don't need the styles, do not connect
-import 'sweetalert2/dist/sweetalert2.min.css';
+import 'sweetalert2/dist/sweetalert2.min.css'
 
-Vue.use(VueSweetalert2);
+Vue.use(VueSweetalert2)
 export default {
   data() {
     return {
@@ -97,19 +97,23 @@ export default {
       let response = await axios.post(`${process.env.baseURL}/api/auth/login`, {
         email: this.inputEmail,
         password: this.inputPassword,
-      });
+      })
       console.log(response.data)
-      if(response.data.success) {
-          this.$swal({
-              title: "Inicio de sessión correctamente",
-              icon: "success"
-          });
-          await this.$router.push('/')
+      if (response.data.success) {
+        this.$swal({
+          title: 'Inicio de sessión correctamente',
+          icon: 'success',
+        })
+        console.log(response.data)
+        // app.$cookies.set('jwt', response.data.jwt, {
+        //   maxAge: 60 * 60 * 24 * 7,
+        // });
+        //   await this.$router.push('/empresa/dashboard')
       } else {
-          this.$swal({
-              title: "Credenciales incorrectas",
-              icon: "error"
-          });
+        this.$swal({
+          title: 'Credenciales incorrectas',
+          icon: 'error',
+        })
       }
     },
   },

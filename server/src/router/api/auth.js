@@ -34,7 +34,7 @@ router.post('/login', async (req, res) => {
         jwt: userJwt,
     };
 
-    res.status(200).send({ success: true });
+    res.status(200).send({ success: true, jwt: userJwt });
 });
 
 module.exports = router;
