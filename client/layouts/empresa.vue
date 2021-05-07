@@ -2,39 +2,42 @@
   <div>
     <Nav />
     <div class="page-content p-5" id="content">
-        <Nuxt />
+      <div id="app">
+        <v-app id="inspire">
+          <Nuxt />
+        </v-app>
+      </div>
     </div>
-    <!-- <Footer /> -->
   </div>
 </template>
 
 <script>
-    import axios from 'axios';
-    export default ({
-        data() {
-            return {
-                fullName: "",
-                sucursal: "",
-                idSucursal: "",
-                img: ""
-            }
-        },
-        // async mounted() {
-        //     let data = await this.$axios.$get(`${process.env.baseURL}/api/user/currentUser`);
-        //     console.log(data)
-            
-        // },
-        // async fetch() {
-        //     // let data = await axios.get(`${process.env.baseURL}/api/user/currentUser`);
-        //     let data = await this.$axios.$get(`${process.env.baseURL}/api/user/currentUser`);
-        //     console.log(data);
-        // }
-    });
+import axios from "axios";
+export default {
+  data() {
+    return {
+      fullName: "",
+      sucursal: "",
+      idSucursal: "",
+      img: "",
+    };
+  },
+  // async mounted() {
+  //     let data = await this.$axios.$get(`${process.env.baseURL}/api/user/currentUser`);
+  //     console.log(data)
+
+  // },
+  // async fetch() {
+  //     // let data = await axios.get(`${process.env.baseURL}/api/user/currentUser`);
+  //     let data = await this.$axios.$get(`${process.env.baseURL}/api/user/currentUser`);
+  //     console.log(data);
+  // }
+};
 </script>
 <style>
 html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
@@ -79,8 +82,6 @@ html {
   color: #fff;
   background-color: #35495e;
 }
-
-
 </style>
 
 <style>

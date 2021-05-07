@@ -25,36 +25,37 @@
 
       <ul class="nav flex-column bg-white mb-0">
         <li class="nav-item">
-          <a href="#" class="nav-link text-dark font-italic bg-light">
+          <NuxtLink
+            to="/empresa/dashboard"
+            class="nav-link text-dark font-italic bg-light"
+          >
             <i class="fa fa-th-large mr-3 text-primary fa-fw"></i>
             Dashboard
-          </a>
+          </NuxtLink>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link text-dark font-italic bg-light">
-            <i class="fa fa-address-card mr-3 text-primary fa-fw"></i>
-            About
-          </a>
+          <NuxtLink
+            to="/empresa/listado-paquetes"
+            class="nav-link text-dark font-italic bg-light"
+          >
+            <i class="fa fa-th-large mr-3 text-primary fa-fw"></i>
+            Listado de Paquetes
+          </NuxtLink>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link text-dark font-italic bg-light">
-            <i class="fa fa-cubes mr-3 text-primary fa-fw"></i>
-            Services
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link text-dark font-italic bg-light">
-            <i class="fa fa-picture-o mr-3 text-primary fa-fw"></i>
-            Gallery
-          </a>
+          <NuxtLink
+            to="/empresa/registrar-paquete"
+            class="nav-link text-dark font-italic bg-light"
+          >
+            <i class="fa fa-th-large mr-3 text-primary fa-fw"></i>
+            Registrar Paquete
+          </NuxtLink>
         </li>
       </ul>
-      <div class="container">
-        <div class="align-self-end ml-auto">
-          <v-btn class="mt-3" block elevation="2" @click="logout()"
-            >Cerrar Sessión</v-btn
-          >
-        </div>
+      <div id="app">
+        <v-app id="inspire" class="p-1">
+          <v-btn color="error" @click="logout()">Cerrar Sessión</v-btn>
+        </v-app>
       </div>
     </div>
   </div>
@@ -62,6 +63,11 @@
 
 <script>
 import axios from "axios";
+import Vue from "vue";
+import Vuetify from "vuetify/lib";
+
+Vue.use(Vuetify);
+
 export default {
   data() {
     return {
@@ -76,12 +82,10 @@ export default {
     async logout() {
       document.cookie =
         "express:sess" + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-      console.log(document.cookie);
       await this.$router.push("/");
     },
   },
   async fetch() {
-    console.log(document.cookie);
     let { data } = await axios.get(
       `${process.env.baseURL}/api/user/currentUser`,
       {
@@ -95,6 +99,8 @@ export default {
       this.currentUser.rol = data.currentUser.userData.rol;
       this.currentUser.image = data.currentUser.userData.image;
     } else {
+      document.cookie =
+        "express:sess" + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
       await this.$router.push("/");
     }
   },
