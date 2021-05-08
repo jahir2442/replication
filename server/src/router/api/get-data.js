@@ -38,4 +38,16 @@ router.get('/sucursal', currentUser, async (req, res) => {
      }
 });
 
+router.get('/status-paquete', currentUser, async (req, res) => {
+     try {
+          let responseDB = await MySQL.collect('get_status_paquetes');
+          if (responseDB.data[0][0]._message == 0)
+               return res.status(200).send({ success: false });
+          res.send({ success: true, data: responseDB.data[1] });
+     } catch (error) {
+          console.log(error)
+          return res.send({ success: false });
+     }
+});
+
 module.exports = router;

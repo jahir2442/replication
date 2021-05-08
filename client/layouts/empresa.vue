@@ -2,6 +2,15 @@
   <div>
     <Nav />
     <div class="page-content p-5" id="content">
+      <button
+        id="sidebarCollapse"
+        type="button"
+        @click="toggle()"
+        class="btn btn-light bg-white rounded-pill shadow-sm px-4 mb-4"
+      >
+        <i class="fa fa-bars"></i
+        ><small class="text-uppercase font-weight-bold">Menu</small>
+      </button>
       <div id="app">
         <v-app id="inspire">
           <Nuxt />
@@ -12,7 +21,6 @@
 </template>
 
 <script>
-import axios from "axios";
 export default {
   data() {
     return {
@@ -22,16 +30,17 @@ export default {
       img: "",
     };
   },
-  // async mounted() {
-  //     let data = await this.$axios.$get(`${process.env.baseURL}/api/user/currentUser`);
-  //     console.log(data)
-
-  // },
-  // async fetch() {
-  //     // let data = await axios.get(`${process.env.baseURL}/api/user/currentUser`);
-  //     let data = await this.$axios.$get(`${process.env.baseURL}/api/user/currentUser`);
-  //     console.log(data);
-  // }
+  methods: {
+    toggle() {
+      if (document.getElementById("content").classList.contains("active")) {
+        document.getElementById("content").classList.remove("active");
+        document.getElementById("sidebar").classList.remove("active");
+      } else {
+        document.getElementById("sidebar").classList.add("active");
+        document.getElementById("content").classList.add("active");
+      }
+    },
+  },
 };
 </script>
 <style>
@@ -85,14 +94,6 @@ html {
 </style>
 
 <style>
-/*
-*
-* ==========================================
-* CUSTOM UTIL CLASSES
-* ==========================================
-*
-*/
-
 .vertical-nav {
   min-width: 17rem;
   width: 17rem;

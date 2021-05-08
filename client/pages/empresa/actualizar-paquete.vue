@@ -2,9 +2,9 @@
   <div>
     <nav aria-label="breadcrumb" class="p-2">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item">Main</li>
+        <li class="breadcrumb-item">Listado de Paquetes</li>
         <li class="breadcrumb-item active" aria-current="page">
-          Registrar Paquete
+          Actualizar Paquete
         </li>
       </ol>
     </nav>
@@ -13,8 +13,8 @@
         <div class="container">
           <div class="row">
             <div class="col-lg-10 col-xl-7 mx-auto">
-              <h3 class="display-2 text-center">Registro de paquetería</h3>
-              <form @submit.prevent="savePaqueteria()">
+              <h3 class="display-2 text-center">Actualizar Paquete</h3>
+              <form @submit.prevent="submitUpdate()">
                 <div class="form-group mb-3">
                   <label
                     ><span style="color: red">*</span> Numero de tracking</label
@@ -56,6 +56,27 @@
                     class="form-control rounded-pill border-0 shadow px-4"
                   />
                   <label v-show="error.volumen" style="color: red">
+                    Campo requerido
+                  </label>
+                </div>
+                <div class="form-group mb-3">
+                  <label
+                    ><span style="color: red">*</span> Estado Paquete</label
+                  >
+                  <v-select
+                    v-model="status"
+                    :items="itemsStatus"
+                    :item-text="'name_status'"
+                    :item-value="'id_status'"
+                    label="Cliente"
+                    attach
+                    dense
+                    filled
+                    rounded
+                    solo
+                    @change="valid('status')"
+                  ></v-select>
+                  <label v-show="error.cliente" style="color: red">
                     Campo requerido
                   </label>
                 </div>
@@ -142,12 +163,13 @@ export default {
   data() {
     return {
       error: {
-        tracking: true,
-        description: true,
-        volumen: true,
-        cliente: true,
-        sucursal: true,
-        almacen: true,
+        tracking: false,
+        description: false,
+        volumen: false,
+        cliente: false,
+        sucursal: false,
+        almacen: false,
+        status: false,
       },
       tracking: "",
       description: "",
@@ -155,12 +177,29 @@ export default {
       cliente: "",
       sucursal: "",
       almacen: "",
+      status: "",
       itemsAlmacen: [],
       itemsClients: [],
       itemsSucursal: [],
+      itemsStatus: [],
     };
   },
   async fetch() {
+    let id = atob(this.$router.currentRoute.query.id);
+    if (!id) await this.$router.push(`/empresa/listado-paquetes`);
+
+    let responsePaquete = await axios.get(
+      `${process.env.baseURL}/api/inventory/paquete`,
+      {
+        headers: {
+          "Set-Cookie": document.cookie,
+        },
+        params: { id },
+      }
+    );
+
+    if (!responsePaquete.data.success)
+      return await this.$router.push(`/empresa/listado-paquetes`);
     let responseAlmacen = await axios.get(
       `${process.env.baseURL}/api/get/almacen`,
       {
@@ -188,6 +227,25 @@ export default {
       }
     );
     this.itemsSucursal = responseSucursal.data.data;
+    let responseStatus = await axios.get(
+      `${process.env.baseURL}/api/get/status-paquete`,
+      {
+        headers: {
+          "Set-Cookie": document.cookie,
+        },
+      }
+    );
+    this.itemsStatus = responseStatus.data.data.filter((s) => s.id_status != 3);
+
+    let dataDB = responsePaquete.data.data;
+    this.id_paquete = dataDB.id_paquete;
+    this.tracking = dataDB.number_tracking;
+    this.description = dataDB.description_paquete;
+    this.volumen = dataDB.volume;
+    this.cliente = dataDB.id_user;
+    this.sucursal = dataDB.id_sucursal;
+    this.almacen = dataDB.id_almacen;
+    this.status = dataDB.status_paquete;
   },
   methods: {
     valid(value) {
@@ -200,41 +258,37 @@ export default {
         else this.error[value] = true;
       }
     },
-    async savePaqueteria() {
+    async submitUpdate() {
       if (!Object.values(this.error).every((e) => e === false)) return;
       let model = {
+        id: this.id_paquete,
         tracking: this.tracking,
         description: this.description,
         volume: this.volumen,
-        almacen_position: this.almacen,
+        status_paquete: this.status,
         client: this.cliente,
         sucursal: this.sucursal,
+        almacen_position: this.almacen,
       };
-      let response = await axios({
-        url: "/api/inventory/paquete",
-        method: "post",
-        baseURL: process.env.baseURL,
-        data: model,
-      });
+      let response = await axios(
+        {
+          url: "/api/inventory/paquete",
+          method: "patch",
+          baseURL: process.env.baseURL,
+          data: model,
+        },
+        {
+          headers: {
+            "Set-Cookie": document.cookie,
+          },
+        }
+      );
       if (response.data.success) {
         Swal.fire({
-          title: "Paquete creado con éxito",
+          title: "Paquete actualizado con éxito",
           icon: "success",
         });
-        this.error = {
-          tracking: true,
-          description: true,
-          volumen: true,
-          cliente: true,
-          sucursal: true,
-          almacen: true,
-        };
-        this.tracking = "";
-        this.description = "";
-        this.volumen = "";
-        this.cliente = "";
-        this.sucursal = "";
-        this.almacen = "";
+        await this.$router.push(`/empresa/listado-paquetes`);
       } else {
         Swal.fire({
           title: "Ocurrio un error al crear el paquete",
