@@ -59,7 +59,6 @@ export default {
     let totalSucursales = dataDasboard.sucursales.reduce((acc, current) => {
       return (acc += current.paquetes_sucursal);
     }, 0);
-    console.log(totalSucursales);
     dataDasboard.sucursales = dataDasboard.sucursales.map((d) => {
       return {
         ...d,

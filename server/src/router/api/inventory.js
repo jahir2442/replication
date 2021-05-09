@@ -94,4 +94,24 @@ router.patch('/paquete', async (req, res) => {
      }
 });
 
+router.post('/paquete-factura', async (req, res) => {
+     try {
+          let data = req.body.data;
+          let responseDB = await MySQL.collect(
+               'paquete_change_status',
+               [
+                    'id',
+                    'date'
+               ],
+               data
+          );
+          if (responseDB.data[0][0]._message == 0)
+               return res.status(200).send({ success: false });
+          res.send({ success: true });
+     } catch (error) {
+          console.log(error)
+          return res.send({ success: false });
+     }
+});
+
 module.exports = router;

@@ -41,7 +41,11 @@
             </v-chip>
           </template>
           <template v-slot:[`item.actions`]="{ item }">
-            <v-icon v-show="item.status_paquete == 2" color="green">
+            <v-icon
+              v-show="item.status_paquete == 2"
+              color="green"
+              @click="sendFactura(item.id_paquete)"
+            >
               mdi-check
             </v-icon>
             <v-icon
@@ -131,6 +135,11 @@ export default {
         `/empresa/actualizar-paquete?id=${btoa(id_paquete)}`
       );
     },
+    async sendFactura(id_paquete) {
+      await this.$router.push(
+        `/empresa/factura-paquete?id=${btoa(id_paquete)}`
+      );
+    },
     deletePaquete(id_paquete) {
       Swal.fire({
         title: "¿Seguro de desea eliminar este paquete?",
@@ -169,7 +178,6 @@ export default {
           }
         }
       });
-      //  console.log(responseDeletePaquete);
     },
   },
 };

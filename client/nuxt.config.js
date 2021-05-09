@@ -12,7 +12,7 @@ export default {
 
      // Global page headers: https://go.nuxtjs.dev/config-head
      head: {
-          title: 'replication-proyect',
+          title: 'Proyect-DB',
           htmlAttrs: {
                lang: 'en',
           },
