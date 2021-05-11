@@ -45,6 +45,7 @@ export default {
     let dataDasboard = {
       donut: responseDashboard.data.data[1],
       sucursales: responseDashboard.data.data[2],
+      paquetes: responseDashboard.data.data[3]
     };
     let totalDonut = dataDasboard.donut.reduce((acc, current) => {
       return (acc += current.cantidad_status);
@@ -66,6 +67,42 @@ export default {
         y: (d.paquetes_sucursal / totalSucursales) * 100,
       };
     });
+    dataDasboard.paquetes =  dataDasboard.paquetes.map((p) => {
+         return {
+              ...p,
+               llegada: new Date(p.fecha_llegada).getMonth(),
+               salida: p.fecha_retiro == '' ? undefined : new Date(p.fecha_retiro).getMonth()
+         }
+    });
+
+    function groupBy(keyName) {
+  
+      var occurences = dataDasboard.paquetes.reduce(function (r, row) {
+          r[row[keyName]] = ++r[row[keyName]] || 1;
+          return r;
+      }, {});
+
+      var result = Object.keys(occurences).map(function (key)       {
+          return { key: key, value: occurences[key] };
+      });
+
+      return result;
+  }     
+  
+     let resultLlegada = groupBy("llegada");
+     let resultSalida = groupBy("salida");
+
+     let entrada = new Array(12).fill(0);
+     let salida =  new Array(12).fill(0);
+     resultLlegada.forEach(r => {
+          if(r.key != "undefined")
+          entrada[+r.key] = r.value
+     })
+     resultSalida.forEach(r => {
+          if(r.key != "undefined")
+          salida[+r.key] = r.value
+     })
+    
     Highcharts.chart("donut-chart", {
       chart: {
         plotBackgroundColor: null,
@@ -92,6 +129,7 @@ export default {
             enabled: true,
             format: "<b>{point.name}</b>: {point.percentage:.1f} %",
           },
+          showInLegend: true
         },
       },
       credits: false,
@@ -156,30 +194,27 @@ export default {
         type: "line",
       },
       title: {
-        text: "Monthly Average Temperature",
-      },
-      subtitle: {
-        text: "Source: WorldClimate.com",
+        text: "Estadisticas sobre la entrada y salida de paquetes por mes",
       },
       xAxis: {
         categories: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
+          "Enero",
+          "Febrero",
+          "Marzo",
+          "Abril",
+          "Mayo",
+          "Junio",
+          "Julio",
+          "Agosto",
+          "Septiembre",
+          "Octubre",
+          "Noviembre",
+          "Diciembre",
         ],
       },
       yAxis: {
         title: {
-          text: "Temperature (°C)",
+          text: "Cantidad de paquetes",
         },
       },
       plotOptions: {
@@ -192,12 +227,12 @@ export default {
       },
       series: [
         {
-          name: "Tokyo",
-          data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 0, 9, 23.3, 18.3, 13.9, 9.6],
+          name: "Entrada",
+          data: entrada
         },
         {
-          name: "London",
-          data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 0, 14.2, 10.3, 6.6, 0],
+          name: "Salida",
+          data: salida,
         },
       ],
     });
