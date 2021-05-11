@@ -71,12 +71,12 @@ export default {
          return {
               ...p,
                llegada: new Date(p.fecha_llegada).getMonth(),
-               salida: p.fecha_retiro == '' ? undefined : new Date(p.fecha_retiro).getMonth()
+               salida: p.fecha_retiro == '' || p.fecha_retiro == null ? undefined : new Date(p.fecha_retiro).getMonth()
          }
     });
-
+    console.log(dataDasboard.paquetes);
     function groupBy(keyName) {
-  
+
       var occurences = dataDasboard.paquetes.reduce(function (r, row) {
           r[row[keyName]] = ++r[row[keyName]] || 1;
           return r;
@@ -87,10 +87,11 @@ export default {
       });
 
       return result;
-  }     
-  
+  }
+
      let resultLlegada = groupBy("llegada");
      let resultSalida = groupBy("salida");
+     console.log(resultSalida);
 
      let entrada = new Array(12).fill(0);
      let salida =  new Array(12).fill(0);
@@ -102,7 +103,7 @@ export default {
           if(r.key != "undefined")
           salida[+r.key] = r.value
      })
-    
+
     Highcharts.chart("donut-chart", {
       chart: {
         plotBackgroundColor: null,
